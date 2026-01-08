@@ -23,6 +23,8 @@
 html, body {
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: none; /* Prevent pull-to-refresh */
+  touch-action: none; /* Prevent default touch actions */
 }
 
 body {
@@ -157,4 +159,5 @@ body {
     transform: scale(1);
   }
 }
+
 

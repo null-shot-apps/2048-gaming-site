@@ -213,10 +213,15 @@ export default function Rialo2048() {
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent pull-to-refresh
     setTouchStart({
       x: e.touches[0].clientX,
       y: e.touches[0].clientY
     });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent pull-to-refresh and scrolling
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -229,11 +234,15 @@ export default function Rialo2048() {
 
     const dx = touchEnd.x - touchStart.x;
     const dy = touchEnd.y - touchStart.y;
+    
+    const minSwipeDistance = 30; // Minimum distance for a swipe
 
-    if (Math.abs(dx) > Math.abs(dy)) {
-      move(dx > 0 ? 'right' : 'left');
-    } else {
-      move(dy > 0 ? 'down' : 'up');
+    if (Math.abs(dx) > minSwipeDistance || Math.abs(dy) > minSwipeDistance) {
+      if (Math.abs(dx) > Math.abs(dy)) {
+        move(dx > 0 ? 'right' : 'left');
+      } else {
+        move(dy > 0 ? 'down' : 'up');
+      }
     }
 
     setTouchStart(null);
@@ -257,7 +266,7 @@ export default function Rialo2048() {
   };
 
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-yellow-400 flex items-center justify-center p-4">
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-yellow-400 flex items-center justify-center p-4 touch-none overscroll-none">
       <div className="max-w-lg w-full">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -275,8 +284,9 @@ export default function Rialo2048() {
 
         {/* Game Board */}
         <div 
-          className="relative bg-yellow-600 rounded-lg p-3 aspect-square"
+          className="relative bg-yellow-600 rounded-lg p-3 aspect-square touch-none"
           onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {/* Grid background */}
@@ -332,4 +342,7 @@ export default function Rialo2048() {
     </div>
   );
 }
+
+
+
 
